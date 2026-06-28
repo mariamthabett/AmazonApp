@@ -1,0 +1,151 @@
+/* ===== أساسيات ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #f3f3f3;
+  color: #111;
+  direction: rtl;
+}
+
+a {
+  color: #007185;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== الهيدر ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: #131921;
+  color: #fff;
+}
+.logo {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.nav-link {
+  color: #fff;
+}
+.welcome {
+  color: #f0c14b;
+  font-weight: bold;
+}
+
+/* ===== المحتوى ===== */
+.main {
+  min-height: calc(100vh - 110px);
+  padding: 24px;
+}
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ===== الكروت والفورمات ===== */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.card h1,
+.card h2 {
+  margin-bottom: 16px;
+}
+
+.form label {
+  display: block;
+  margin: 12px 0 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.form input:focus {
+  outline: 2px solid #e77600;
+  border-color: #e77600;
+}
+
+/* صفّين جنب بعض (الاسم الأول/الأخير، الباسورد/التأكيد) */
+.row {
+  display: flex;
+  gap: 12px;
+}
+.col {
+  flex: 1;
+}
+
+/* ===== الأزرار ===== */
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.btn-primary {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px;
+  background: #f0c14b;
+  border: 1px solid #a88734;
+  font-weight: bold;
+}
+.btn-primary:hover {
+  background: #e7b53c;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-link {
+  background: none;
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ===== رسائل ===== */
+.alert {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.muted {
+  color: #555;
+  font-size: 14px;
+  margin-top: 14px;
+}
+
+/* ===== الفوتر ===== */
+.footer {
+  text-align: center;
+  padding: 16px;
+  background: #232f3e;
+  color: #ccc;
+  font-size: 13px;
+}

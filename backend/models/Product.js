@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Reviews are embedded inside the product (matches POST /api/products/:id/reviews)
 const reviewSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -13,21 +12,36 @@ const reviewSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
+    // product name
     title: { type: String, required: true, trim: true },
+
+    // description of the product
     description: { type: String, default: "" },
+
+    // price of the product
     price: { type: Number, required: true, default: 0 },
-    stock: { type: Number, required: true, default: 0 },
+
+    // image of the product
     image: { type: String, default: "" },
-    category: {
+
+    //category
+     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
+    //in stock
+    stock: { type: Number, required: true, default: 0 },
+
+    // reviews
     reviews: [reviewSchema],
-    rating: { type: Number, default: 0 },
+
+    //ratings
+    rating: { type: Number, default: 0, min: 0, max: 5 },
+
+    //numReviews
     numReviews: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
-
 module.exports = mongoose.model("Product", productSchema);

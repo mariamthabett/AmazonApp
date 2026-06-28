@@ -5,11 +5,25 @@ const generateToken = require("../utils/generateToken");
 // @route  POST /api/auth/register
 // @access Public
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+    dateOfBirth,
+    phoneNumber,
+  } = req.body;
 
-  if (!name || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     res.status(400);
-    throw new Error("Please provide name, email and password");
+    throw new Error("Please provide first name, last name, email and password");
+  }
+
+  // confirmPassword is validated here only — never stored in the database
+  if (confirmPassword !== undefined && password !== confirmPassword) {
+    res.status(400);
+    throw new Error("Passwords do not match");
   }
 
   const exists = await User.findOne({ email });
@@ -18,10 +32,19 @@ const register = async (req, res) => {
     throw new Error("Email already registered");
   }
 
-  const user = await User.create({ name, email, password });
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    dateOfBirth,
+    phoneNumber,
+  });
 
   res.status(201).json({
     _id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -39,6 +62,8 @@ const login = async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     return res.json({
       _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       name: user.name,
       email: user.email,
       role: user.role,

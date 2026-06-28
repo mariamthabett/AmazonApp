@@ -27,16 +27,20 @@ const importData = async () => {
 
     // Admin + demo customer
     const admin = await User.create({
-      name: "Admin",
+      firstName: "Admin",
+      lastName: "User",
       email: "admin@example.com",
       password: "123456",
       role: "admin",
+      phoneNumber: "01000000000",
     });
     await User.create({
-      name: "Customer",
+      firstName: "Demo",
+      lastName: "Customer",
       email: "customer@example.com",
       password: "123456",
       role: "customer",
+      phoneNumber: "01011111111",
     });
 
     // Categories

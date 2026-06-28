@@ -3,7 +3,19 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
+    firstName: 
+    { type: String, 
+      required: true,
+       trim: true
+
+     },
+
+    lastName:
+     { 
+      type: String,
+       required: true, 
+       trim: true
+       },
     email: {
       type: String,
       required: true,
@@ -11,15 +23,26 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true, minlength: 6 },
+    password: { 
+      type: String,
+       required: true, 
+       minlength: 6 
+      },
     role: {
       type: String,
       enum: ["customer", "admin"],
       default: "customer",
     },
+    dateOfBirth: { type: Date },
+    phoneNumber: { type: String, trim: true },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// Convenience full-name field (not stored, computed from first + last name)
+userSchema.virtual("name").get(function () {
+  return `${this.firstName} ${this.lastName}`.trim();
+});
 
 // Hash the password before saving (only if it changed)
 userSchema.pre("save", async function (next) {

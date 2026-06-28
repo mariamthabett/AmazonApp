@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../components/AuthLayout";
 
 const initialForm = {
   firstName: "",
@@ -47,26 +48,29 @@ export default function Register() {
   };
 
   return (
-    <div className="container">
-      <form className="card form" onSubmit={handleSubmit}>
-        <h2>إنشاء حساب جديد</h2>
+    <AuthLayout subtitle="اعمل حسابك في دقيقة وابدأ التسوّق.">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2 className="auth-title">إنشاء حساب جديد</h2>
+        <p className="auth-subtitle">املأ بياناتك للبدء</p>
 
-        {error && <div className="alert">{error}</div>}
+        {error && <div className="auth-alert">{error}</div>}
 
-        <div className="row">
-          <div className="col">
+        <div className="field-row">
+          <div className="field">
             <label>الاسم الأول</label>
             <input
               name="firstName"
+              placeholder="محمد"
               value={form.firstName}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="col">
+          <div className="field">
             <label>الاسم الأخير</label>
             <input
               name="lastName"
+              placeholder="أحمد"
               value={form.lastName}
               onChange={handleChange}
               required
@@ -74,31 +78,36 @@ export default function Register() {
           </div>
         </div>
 
-        <label>الإيميل</label>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+        <div className="field">
+          <label>الإيميل</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <div className="row">
-          <div className="col">
+        <div className="field-row">
+          <div className="field">
             <label>الباسورد</label>
             <input
               type="password"
               name="password"
+              placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="col">
+          <div className="field">
             <label>تأكيد الباسورد</label>
             <input
               type="password"
               name="confirmPassword"
+              placeholder="••••••••"
               value={form.confirmPassword}
               onChange={handleChange}
               required
@@ -106,30 +115,36 @@ export default function Register() {
           </div>
         </div>
 
-        <label>تاريخ الميلاد</label>
-        <input
-          type="date"
-          name="dateOfBirth"
-          value={form.dateOfBirth}
-          onChange={handleChange}
-        />
+        <div className="field-row">
+          <div className="field">
+            <label>تاريخ الميلاد</label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              value={form.dateOfBirth}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="field">
+            <label>رقم التليفون</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              placeholder="01xxxxxxxxx"
+              value={form.phoneNumber}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
 
-        <label>رقم التليفون</label>
-        <input
-          type="tel"
-          name="phoneNumber"
-          value={form.phoneNumber}
-          onChange={handleChange}
-        />
-
-        <button className="btn btn-primary" type="submit" disabled={loading}>
+        <button className="auth-btn" type="submit" disabled={loading}>
           {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
         </button>
 
-        <p className="muted">
+        <p className="auth-switch">
           عندك حساب بالفعل؟ <Link to="/login">سجّل دخول</Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

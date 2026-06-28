@@ -1,30 +1,29 @@
 import { Link } from "react-router-dom";
+import { useLang } from "../context/LanguageContext";
 
-// الهيكل المشترك لشاشتي الدخول والتسجيل: لوحة براند (gradient) + لوحة الفورم.
-// children = الفورم بتاع كل صفحة.
+// الهيكل المشترك لشاشتي الدخول والتسجيل: لوحة براند + لوحة الفورم.
+// children = الفورم بتاع كل صفحة. subtitle = نص تعريفي اختياري للوحة البراند.
 export default function AuthLayout({ children, subtitle }) {
+  const { t } = useLang();
+
   return (
     <div className="auth-page">
-      {/* اللوحة الجانبية: البراند + خلفية التدرّج */}
+      {/* اللوحة الجانبية: البراند + خلفية كحلي */}
       <aside className="auth-brand">
-        {/* أشكال شفافة للزينة */}
         <span className="auth-blob auth-blob-1" />
         <span className="auth-blob auth-blob-2" />
 
         <div className="auth-brand-content">
           <Link to="/" className="auth-logo">
-            🛒 AmazonClone
+            🛒 {t("brand")}
           </Link>
-          <h1 className="auth-brand-title">تسوّق كل اللي نفسك فيه</h1>
-          <p className="auth-brand-text">
-            {subtitle ||
-              "اعمل حسابك وادخل على آلاف المنتجات بأفضل الأسعار."}
-          </p>
+          <h1 className="auth-brand-title">{t("auth.brandTitle")}</h1>
+          <p className="auth-brand-text">{subtitle || t("auth.brandText")}</p>
 
           <ul className="auth-features">
-            <li>✓ توصيل سريع لكل المحافظات</li>
-            <li>✓ دفع آمن وسهل</li>
-            <li>✓ تتبّع طلباتك لحظة بلحظة</li>
+            <li>✓ {t("auth.feature1")}</li>
+            <li>✓ {t("auth.feature2")}</li>
+            <li>✓ {t("auth.feature3")}</li>
           </ul>
         </div>
       </aside>

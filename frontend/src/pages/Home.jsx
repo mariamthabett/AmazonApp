@@ -1,22 +1,20 @@
 import { useAuth } from "../context/AuthContext";
+import { useLang } from "../context/LanguageContext";
 
 export default function Home() {
   const { user } = useAuth();
+  const { t } = useLang();
 
   return (
     <div className="container">
       <div className="card">
-        <h1>الصفحة الرئيسية</h1>
+        <h1>{t("home.title")}</h1>
         {user ? (
-          <p>
-            أهلاً بيك يا <strong>{user.name}</strong> 👋 ({user.email})
-          </p>
+          <p>{t("home.welcome", { name: user.name })} ({user.email})</p>
         ) : (
-          <p>سجّل دخول أو اعمل حساب جديد عشان تبدأ التسوّق.</p>
+          <p>{t("home.guest")}</p>
         )}
-        <p className="muted">
-          هنا هنعرض شبكة المنتجات لاحقًا (Phase 5).
-        </p>
+        <p className="muted">{t("home.placeholder")}</p>
       </div>
     </div>
   );

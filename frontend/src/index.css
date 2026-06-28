@@ -6,20 +6,25 @@
 }
 
 :root {
-  --grad: linear-gradient(135deg, #6d28d9 0%, #4f46e5 50%, #2563eb 100%);
-  --purple: #6d28d9;
-  --indigo: #4f46e5;
+  /* بالتة أمازون: كحلي + برتقالي */
+  --navy-dark: #131921;
+  --navy: #232f3e;
+  --navy-mid: #37475a;
+  --amber: #ff9900;
+  --amber-dark: #f08804;
+  --link: #c45500;
+  --brand-grad: linear-gradient(135deg, #232f3e 0%, #37475a 55%, #131921 100%);
+  --btn-grad: linear-gradient(135deg, #ffb340 0%, #ff9900 55%, #f08804 100%);
 }
 
 body {
   font-family: "Segoe UI", Tahoma, sans-serif;
-  background: #eef2ff;
+  background: #eaeded;
   color: #111;
-  direction: rtl;
 }
 
 a {
-  color: var(--indigo);
+  color: var(--link);
   text-decoration: none;
 }
 a:hover {
@@ -32,13 +37,16 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  background: #131921;
+  background: var(--navy-dark);
   color: #fff;
 }
 .logo {
   color: #fff;
   font-size: 20px;
   font-weight: bold;
+}
+.logo:hover {
+  text-decoration: none;
 }
 .nav {
   display: flex;
@@ -49,8 +57,26 @@ a:hover {
   color: #fff;
 }
 .welcome {
-  color: #f0c14b;
+  color: var(--amber);
   font-weight: bold;
+}
+
+/* زرار تبديل اللغة */
+.lang-btn {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 5px 11px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.lang-btn:hover {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--navy-dark);
 }
 
 /* ===== المحتوى العام ===== */
@@ -71,9 +97,9 @@ a:hover {
 }
 .card h1 {
   margin-bottom: 16px;
+  color: var(--navy);
 }
 
-/* الأزرار العامة */
 .btn {
   cursor: pointer;
   border: none;
@@ -96,13 +122,13 @@ a:hover {
 .footer {
   text-align: center;
   padding: 16px;
-  background: #232f3e;
+  background: var(--navy);
   color: #ccc;
   font-size: 13px;
 }
 
 /* =========================================================
-   شاشات الـ Auth (Login / Sign up) — Split screen + gradient
+   شاشات الـ Auth (Login / Sign up) — Split screen
    ========================================================= */
 .auth-page {
   display: flex;
@@ -112,14 +138,14 @@ a:hover {
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.18);
+  box-shadow: 0 20px 50px rgba(35, 47, 62, 0.22);
 }
 
-/* اللوحة الجانبية (البراند) */
+/* اللوحة الجانبية (البراند) — كحلي */
 .auth-brand {
   position: relative;
   flex: 1 1 42%;
-  background: var(--grad);
+  background: var(--brand-grad);
   color: #fff;
   padding: 48px 36px;
   display: flex;
@@ -145,11 +171,20 @@ a:hover {
   line-height: 1.3;
   margin-bottom: 14px;
 }
+.auth-brand-title::after {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 4px;
+  margin-top: 14px;
+  border-radius: 2px;
+  background: var(--amber);
+}
 .auth-brand-text {
   font-size: 15px;
   opacity: 0.9;
   line-height: 1.7;
-  margin-bottom: 26px;
+  margin: 18px 0 26px;
 }
 .auth-features {
   list-style: none;
@@ -161,25 +196,25 @@ a:hover {
   opacity: 0.95;
 }
 
-/* الأشكال الشفافة للزينة */
+/* أشكال زينة بلمسة برتقالي */
 .auth-blob {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
   z-index: 1;
 }
 .auth-blob-1 {
   width: 220px;
   height: 220px;
   top: -70px;
-  left: -60px;
+  inset-inline-start: -60px;
+  background: rgba(255, 153, 0, 0.16);
 }
 .auth-blob-2 {
   width: 160px;
   height: 160px;
   bottom: -50px;
-  right: -30px;
-  background: rgba(255, 255, 255, 0.08);
+  inset-inline-end: -30px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* لوحة الفورم */
@@ -208,7 +243,7 @@ a:hover {
 .auth-title {
   font-size: 26px;
   margin-bottom: 4px;
-  color: #1e1b4b;
+  color: var(--navy-dark);
 }
 .auth-subtitle {
   color: #6b7280;
@@ -248,20 +283,20 @@ a:hover {
 }
 .field input:focus {
   outline: none;
-  border-color: var(--indigo);
+  border-color: var(--amber);
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.18);
 }
 
-/* الزرار الرئيسي */
+/* الزرار الرئيسي — برتقالي بنص غامق */
 .auth-btn {
   width: 100%;
   margin-top: 8px;
   padding: 13px;
   border: none;
   border-radius: 10px;
-  background: var(--grad);
-  color: #fff;
+  background: var(--btn-grad);
+  color: var(--navy-dark);
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
@@ -269,7 +304,7 @@ a:hover {
 }
 .auth-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 8px 20px rgba(255, 153, 0, 0.4);
 }
 .auth-btn:disabled {
   opacity: 0.6;

@@ -1,7 +1,10 @@
+import { useLang } from "../context/LanguageContext";
+
 export default function Footer() {
+  const { t } = useLang();
   return (
     <footer className="footer">
-      <p>© 2026 AmazonClone — مشروع تعليمي</p>
+      <p>{t("footer.text")}</p>
     </footer>
   );
 }

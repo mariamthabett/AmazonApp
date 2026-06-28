@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLang } from "../context/LanguageContext";
 import AuthLayout from "../components/AuthLayout";
 
 const initialForm = {
@@ -15,6 +16,7 @@ const initialForm = {
 
 export default function Register() {
   const { register, loading } = useAuth();
+  const { t } = useLang();
   const navigate = useNavigate();
 
   const [form, setForm] = useState(initialForm);
@@ -31,11 +33,11 @@ export default function Register() {
 
     // تحقق بسيط في الفرونت قبل ما نبعت للسيرفر
     if (form.password.length < 6) {
-      setError("الباسورد لازم يكون 6 حروف على الأقل");
+      setError(t("register.passwordShort"));
       return;
     }
     if (form.password !== form.confirmPassword) {
-      setError("الباسورد وتأكيد الباسورد مش متطابقين");
+      setError(t("register.passwordMismatch"));
       return;
     }
 
@@ -43,34 +45,32 @@ export default function Register() {
       await register(form);
       navigate("/"); // نجح التسجيل → للرئيسية
     } catch (err) {
-      setError(err.response?.data?.message || "حصل خطأ، حاول تاني");
+      setError(err.response?.data?.message || t("common.error"));
     }
   };
 
   return (
-    <AuthLayout subtitle="اعمل حسابك في دقيقة وابدأ التسوّق.">
+    <AuthLayout subtitle={t("register.brandSubtitle")}>
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2 className="auth-title">إنشاء حساب جديد</h2>
-        <p className="auth-subtitle">املأ بياناتك للبدء</p>
+        <h2 className="auth-title">{t("register.title")}</h2>
+        <p className="auth-subtitle">{t("register.subtitle")}</p>
 
         {error && <div className="auth-alert">{error}</div>}
 
         <div className="field-row">
           <div className="field">
-            <label>الاسم الأول</label>
+            <label>{t("field.firstName")}</label>
             <input
               name="firstName"
-              placeholder="محمد"
               value={form.firstName}
               onChange={handleChange}
               required
             />
           </div>
           <div className="field">
-            <label>الاسم الأخير</label>
+            <label>{t("field.lastName")}</label>
             <input
               name="lastName"
-              placeholder="أحمد"
               value={form.lastName}
               onChange={handleChange}
               required
@@ -79,7 +79,7 @@ export default function Register() {
         </div>
 
         <div className="field">
-          <label>الإيميل</label>
+          <label>{t("field.email")}</label>
           <input
             type="email"
             name="email"
@@ -92,7 +92,7 @@ export default function Register() {
 
         <div className="field-row">
           <div className="field">
-            <label>الباسورد</label>
+            <label>{t("field.password")}</label>
             <input
               type="password"
               name="password"
@@ -103,7 +103,7 @@ export default function Register() {
             />
           </div>
           <div className="field">
-            <label>تأكيد الباسورد</label>
+            <label>{t("field.confirmPassword")}</label>
             <input
               type="password"
               name="confirmPassword"
@@ -117,7 +117,7 @@ export default function Register() {
 
         <div className="field-row">
           <div className="field">
-            <label>تاريخ الميلاد</label>
+            <label>{t("field.dateOfBirth")}</label>
             <input
               type="date"
               name="dateOfBirth"
@@ -126,7 +126,7 @@ export default function Register() {
             />
           </div>
           <div className="field">
-            <label>رقم التليفون</label>
+            <label>{t("field.phoneNumber")}</label>
             <input
               type="tel"
               name="phoneNumber"
@@ -138,11 +138,11 @@ export default function Register() {
         </div>
 
         <button className="auth-btn" type="submit" disabled={loading}>
-          {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
+          {loading ? t("register.loading") : t("register.submit")}
         </button>
 
         <p className="auth-switch">
-          عندك حساب بالفعل؟ <Link to="/login">سجّل دخول</Link>
+          {t("register.haveAccount")} <Link to="/login">{t("register.signIn")}</Link>
         </p>
       </form>
     </AuthLayout>

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLang } from "../context/LanguageContext";
 import AuthLayout from "../components/AuthLayout";
 
 export default function Login() {
   const { login, loading } = useAuth();
+  const { t } = useLang();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -19,20 +21,20 @@ export default function Login() {
       navigate("/"); // نجح الدخول → نروح للرئيسية
     } catch (err) {
       // رسالة الخطأ الجاية من السيرفر بالشكل { message: "..." }
-      setError(err.response?.data?.message || "حصل خطأ، حاول تاني");
+      setError(err.response?.data?.message || t("common.error"));
     }
   };
 
   return (
-    <AuthLayout subtitle="أهلاً بيك تاني! سجّل دخولك وكمّل تسوّقك.">
+    <AuthLayout subtitle={t("login.brandSubtitle")}>
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2 className="auth-title">تسجيل الدخول</h2>
-        <p className="auth-subtitle">ادخل بياناتك عشان تكمّل</p>
+        <h2 className="auth-title">{t("login.title")}</h2>
+        <p className="auth-subtitle">{t("login.subtitle")}</p>
 
         {error && <div className="auth-alert">{error}</div>}
 
         <div className="field">
-          <label>الإيميل</label>
+          <label>{t("field.email")}</label>
           <input
             type="email"
             placeholder="you@example.com"
@@ -43,7 +45,7 @@ export default function Login() {
         </div>
 
         <div className="field">
-          <label>الباسورد</label>
+          <label>{t("field.password")}</label>
           <input
             type="password"
             placeholder="••••••••"
@@ -54,11 +56,11 @@ export default function Login() {
         </div>
 
         <button className="auth-btn" type="submit" disabled={loading}>
-          {loading ? "جاري الدخول..." : "دخول"}
+          {loading ? t("login.loading") : t("login.submit")}
         </button>
 
         <p className="auth-switch">
-          معندكش حساب؟ <Link to="/register">اعمل حساب جديد</Link>
+          {t("login.noAccount")} <Link to="/register">{t("login.createOne")}</Link>
         </p>
       </form>
     </AuthLayout>

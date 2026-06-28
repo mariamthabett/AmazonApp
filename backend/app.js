@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
-// نبدأ الاتصال بقاعدة البيانات (مع caching جوّه db.js عشان الـ serverless)
+// نبدأ تسخين الاتصال بقاعدة البيانات (مع caching جوّه db.js عشان الـ serverless)
 connectDB().catch((err) =>
   console.error(`Initial DB connection error: ${err.message}`)
 );
@@ -15,6 +15,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// مهم للـ serverless: نتأكد إن الاتصال بالداتابيز كمّل قبل أي طلب
+// (من غير كده الكويري بيتعمله buffering وبيـ timeout على Vercel)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Health check route
 app.get("/", (req, res) => {

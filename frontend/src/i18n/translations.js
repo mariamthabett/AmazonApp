@@ -4,12 +4,12 @@ const translations = {
   ar: {
     // عام
     "brand": "AmazonClone",
-    "common.error": "حصل خطأ، حاول تاني",
+    "common.error": "حدث خطأ ما، يُرجى المحاولة مرة أخرى",
 
     // الهيدر
-    "header.hi": "أهلاً،",
-    "header.logout": "تسجيل خروج",
-    "header.login": "تسجيل دخول",
+    "header.hi": "مرحبًا،",
+    "header.logout": "تسجيل الخروج",
+    "header.login": "تسجيل الدخول",
     "header.register": "إنشاء حساب",
 
     // الفوتر
@@ -17,45 +17,45 @@ const translations = {
 
     // الرئيسية
     "home.title": "الصفحة الرئيسية",
-    "home.welcome": "أهلاً بيك يا {name} 👋",
-    "home.guest": "سجّل دخول أو اعمل حساب جديد عشان تبدأ التسوّق.",
-    "home.placeholder": "هنا هنعرض شبكة المنتجات لاحقًا.",
+    "home.welcome": "مرحبًا بك يا {name} 👋",
+    "home.guest": "سجّل الدخول أو أنشئ حسابًا جديدًا لتبدأ التسوّق.",
+    "home.placeholder": "ستظهر شبكة المنتجات هنا لاحقًا.",
 
-    // لوحة البراند الجانبية
-    "auth.brandTitle": "تسوّق كل اللي نفسك فيه",
-    "auth.brandText": "اعمل حسابك وادخل على آلاف المنتجات بأفضل الأسعار.",
-    "auth.feature1": "توصيل سريع لكل المحافظات",
+    // لوحة العلامة التجارية الجانبية
+    "auth.brandTitle": "تسوّق كل ما تحب",
+    "auth.brandText": "أنشئ حسابك واستكشف آلاف المنتجات بأفضل الأسعار.",
+    "auth.feature1": "توصيل سريع إلى جميع المحافظات",
     "auth.feature2": "دفع آمن وسهل",
     "auth.feature3": "تتبّع طلباتك لحظة بلحظة",
 
     // تسجيل الدخول
-    "login.brandSubtitle": "أهلاً بيك تاني! سجّل دخولك وكمّل تسوّقك.",
+    "login.brandSubtitle": "مرحبًا بعودتك! سجّل الدخول وأكمل تسوّقك.",
     "login.title": "تسجيل الدخول",
-    "login.subtitle": "ادخل بياناتك عشان تكمّل",
-    "login.submit": "دخول",
-    "login.loading": "جاري الدخول...",
-    "login.noAccount": "معندكش حساب؟",
-    "login.createOne": "اعمل حساب جديد",
+    "login.subtitle": "أدخل بياناتك للمتابعة",
+    "login.submit": "تسجيل الدخول",
+    "login.loading": "جارٍ تسجيل الدخول...",
+    "login.noAccount": "ليس لديك حساب؟",
+    "login.createOne": "أنشئ حسابًا جديدًا",
 
     // إنشاء حساب
-    "register.brandSubtitle": "اعمل حسابك في دقيقة وابدأ التسوّق.",
+    "register.brandSubtitle": "أنشئ حسابك في دقيقة وابدأ التسوّق.",
     "register.title": "إنشاء حساب جديد",
     "register.subtitle": "املأ بياناتك للبدء",
     "register.submit": "إنشاء حساب",
-    "register.loading": "جاري إنشاء الحساب...",
-    "register.haveAccount": "عندك حساب بالفعل؟",
-    "register.signIn": "سجّل دخول",
-    "register.passwordShort": "الباسورد لازم يكون 6 حروف على الأقل",
-    "register.passwordMismatch": "الباسورد وتأكيد الباسورد مش متطابقين",
+    "register.loading": "جارٍ إنشاء الحساب...",
+    "register.haveAccount": "لديك حساب بالفعل؟",
+    "register.signIn": "تسجيل الدخول",
+    "register.passwordShort": "يجب أن تتكوّن كلمة المرور من 6 أحرف على الأقل",
+    "register.passwordMismatch": "كلمة المرور وتأكيدها غير متطابقين",
 
     // أسماء الحقول
     "field.firstName": "الاسم الأول",
-    "field.lastName": "الاسم الأخير",
-    "field.email": "الإيميل",
-    "field.password": "الباسورد",
-    "field.confirmPassword": "تأكيد الباسورد",
+    "field.lastName": "اسم العائلة",
+    "field.email": "البريد الإلكتروني",
+    "field.password": "كلمة المرور",
+    "field.confirmPassword": "تأكيد كلمة المرور",
     "field.dateOfBirth": "تاريخ الميلاد",
-    "field.phoneNumber": "رقم التليفون",
+    "field.phoneNumber": "رقم الهاتف",
   },
 
   en: {
@@ -64,7 +64,7 @@ const translations = {
     "common.error": "Something went wrong, please try again",
 
     // header
-    "header.hi": "Hi,",
+    "header.hi": "Hello,",
     "header.logout": "Logout",
     "header.login": "Login",
     "header.register": "Sign up",
@@ -81,8 +81,8 @@ const translations = {
     // brand side panel
     "auth.brandTitle": "Shop everything you love",
     "auth.brandText": "Create your account and explore thousands of products at the best prices.",
-    "auth.feature1": "Fast delivery everywhere",
-    "auth.feature2": "Safe & easy payment",
+    "auth.feature1": "Fast delivery to all governorates",
+    "auth.feature2": "Secure & easy payments",
     "auth.feature3": "Track your orders in real time",
 
     // login

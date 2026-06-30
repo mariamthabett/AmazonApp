@@ -59,10 +59,13 @@ const CATALOG = {
   ],
 };
 
-// رابط صورة مناسبة للمنتج حسب الكلمة المفتاحية (loremflickr بيرجّع صورة حقيقية للكلمة).
-// lock = رقم ثابت عشان نفس المنتج يرجّع نفس الصورة كل مرة بدل ما تتغيّر.
-function buildImageUrl(item, lockSeed) {
-  return `https://loremflickr.com/600/600/${item.img}?lock=${lockSeed}`;
+// رابط صورة مناسبة للمنتج.
+// بنستخدم مولّد صور (pollinations) بـ prompt واضح عشان الصورة دايمًا تبقى متعلّقة
+// بالمنتج وموجودة (مفيش 404)، والـ seed الثابت بيخلّي نفس المنتج يرجّع نفس الصورة.
+function buildImageUrl(item, seed) {
+  const prompt = `${item.title}, ${item.img}, product photo, white background, studio lighting, e-commerce`;
+  const encoded = encodeURIComponent(prompt);
+  return `https://image.pollinations.ai/prompt/${encoded}?width=600&height=600&seed=${seed}&nologo=true`;
 }
 
 // عبارات جاهزة للريفيوز

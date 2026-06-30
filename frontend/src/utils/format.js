@@ -21,7 +21,21 @@ export const FALLBACK_IMAGE =
   );
 
 // نستخدمها على عنصر <img>: onError={onImgError}
+// لو الصورة فشلت: نعيد المحاولة مرة واحدة (مفيد لو مولّد الصور اتأخر/رجّع خطأ مؤقت)،
+// وبعدين نعرض صورة بديلة بدل ما يفضل فاضي.
 export function onImgError(e) {
-  e.currentTarget.onerror = null;
-  e.currentTarget.src = FALLBACK_IMAGE;
+  const img = e.currentTarget;
+  const src = img.src || "";
+
+  // متعملتش retry قبل كده، والصورة مش هي البديلة نفسها؟ نجرّب تاني مرة واحدة.
+  if (!img.dataset.retried && src && !src.startsWith("data:")) {
+    img.dataset.retried = "1";
+    const sep = src.includes("?") ? "&" : "?";
+    img.src = src.split("#")[0] + sep + "_retry=1";
+    return;
+  }
+
+  // فشلت المحاولة كمان → صورة بديلة نهائية
+  img.onerror = null;
+  img.src = FALLBACK_IMAGE;
 }

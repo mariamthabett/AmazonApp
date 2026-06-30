@@ -70,9 +70,9 @@ export default function Header() {
 
           {user ? (
             <>
-              <span className="welcome">
+              <Link to="/profile" className="welcome" title={t("nav.account")}>
                 {t("header.hi")} {user.firstName}
-              </span>
+              </Link>
               <button className="btn btn-link" onClick={handleLogout}>
                 {t("header.logout")}
               </button>

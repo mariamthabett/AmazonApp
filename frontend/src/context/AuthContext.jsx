@@ -52,8 +52,24 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
+  // تحديث بيانات المستخدم بعد تعديل البروفايل
+  // لو الرد فيه token جديد بنخزّنه، وإلا بندمج البيانات الجديدة مع القديمة
+  const updateUser = (data) => {
+    if (data.token) {
+      saveSession(data);
+    } else {
+      setUser((prev) => {
+        const merged = { ...prev, ...data };
+        localStorage.setItem("user", JSON.stringify(merged));
+        return merged;
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, register, login, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

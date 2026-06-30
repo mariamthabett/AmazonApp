@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import AuthLayout from "../components/AuthLayout";
@@ -8,6 +8,9 @@ export default function Login() {
   const { login, loading } = useAuth();
   const { t } = useLang();
   const navigate = useNavigate();
+  const location = useLocation();
+  // المسار اللي كان المستخدم رايحله قبل ما نطلب منه يسجّل دخول
+  const redirectTo = location.state?.from?.pathname || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +21,7 @@ export default function Login() {
     setError("");
     try {
       await login(email, password);
-      navigate("/"); // نجح الدخول → نروح للرئيسية
+      navigate(redirectTo, { replace: true }); // نرجّعه للمكان اللي كان رايحله
     } catch (err) {
       // رسالة الخطأ الجاية من السيرفر بالشكل { message: "..." }
       setError(err.response?.data?.message || t("common.error"));

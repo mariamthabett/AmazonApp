@@ -1872,6 +1872,438 @@ a:hover {
   }
 }
 
+/* =========================================================
+   زرار المفضّلة (قلب) + ترقيم الصفحات
+   ========================================================= */
+.wish-btn {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s, color 0.15s, background 0.15s;
+  z-index: 2;
+}
+.wish-btn:hover {
+  transform: scale(1.12);
+  color: #e0245e;
+}
+.wish-btn.on {
+  color: #e0245e;
+}
+
+.related-section {
+  margin-top: 30px;
+}
+/* مسافة بين أي زرارين block فوق بعض */
+.btn-block + .btn-block {
+  margin-top: 10px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+.page-btn {
+  border: 1.5px solid #d5d9d9;
+  background: #fff;
+  color: var(--navy);
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+}
+.page-btn:hover:not(:disabled) {
+  border-color: var(--amber);
+  background: #fff7ec;
+}
+.page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.page-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* =========================================================
+   لوحة الأدمن (Admin dashboard)
+   ========================================================= */
+.admin-pill {
+  background: var(--amber);
+  color: var(--navy-dark) !important;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-weight: 700;
+}
+.admin-pill:hover {
+  text-decoration: none;
+  background: var(--amber-dark);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.admin-tab {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.admin-tab:hover {
+  color: var(--navy);
+  text-decoration: none;
+}
+.admin-tab.active {
+  color: var(--link);
+  border-bottom-color: var(--amber);
+}
+
+/* شريط أدوات (عنوان + زر إضافة) */
+.admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.admin-bar h2 {
+  font-size: 18px;
+  color: var(--navy);
+}
+
+/* كروت الإحصائيات */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+.stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 153, 0, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy-dark);
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.admin-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+}
+.admin-panel-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 14px;
+}
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+.top-item:last-child {
+  border-bottom: none;
+}
+.top-item-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f7fafa;
+  flex-shrink: 0;
+}
+.top-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.top-item-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--navy);
+  min-width: 0;
+}
+.top-item-meta {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+.status-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* جدول الأدمن */
+.admin-table-wrap {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow-x: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 640px;
+}
+.admin-table th,
+.admin-table td {
+  padding: 12px 14px;
+  text-align: start;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: middle;
+}
+.admin-table th {
+  background: #f7fafa;
+  color: #6b7280;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.admin-table tbody tr:hover {
+  background: #fafbfb;
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.table-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f7fafa;
+}
+.table-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.row-actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+.icon-btn-sm {
+  border: 1.5px solid #d5d9d9;
+  background: #fff;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--navy);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.icon-btn-sm:hover {
+  border-color: var(--amber);
+  background: #fff7ec;
+}
+.icon-btn-sm.danger {
+  color: #b91c1c;
+}
+.icon-btn-sm.danger:hover {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+/* مودال (نموذج إضافة/تعديل) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(19, 25, 33, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  z-index: 1100;
+  overflow-y: auto;
+}
+.modal-card {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(19, 25, 33, 0.3);
+  animation: toastIn 0.2s ease;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.modal-head h3 {
+  font-size: 18px;
+  color: var(--navy);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #6b7280;
+  line-height: 1;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.modal-actions .btn-primary,
+.modal-actions .btn-outline {
+  flex: 1;
+}
+.img-preview {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+  background: #f7fafa;
+  margin-top: 8px;
+}
+
+@media (max-width: 820px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   إشعارات (Toasts)
+   ========================================================= */
+.toast-container {
+  position: fixed;
+  bottom: 22px;
+  inset-inline-end: 22px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+  max-width: 360px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-align: start;
+  box-shadow: 0 10px 28px rgba(19, 25, 33, 0.32);
+  animation: toastIn 0.25s ease;
+}
+.toast-success .toast-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--amber);
+  color: var(--navy-dark);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.toast-error {
+  background: #b91c1c;
+}
+.toast-text {
+  flex: 1;
+}
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 520px) {
+  .toast-container {
+    inset-inline: 12px;
+    bottom: 12px;
+  }
+  .toast {
+    max-width: none;
+    width: 100%;
+  }
+}
+
 /* ----- حاويات أعمدة الجريد (تمنع تجاوز المحتوى) ----- */
 .pd-info,
 .shop-main,

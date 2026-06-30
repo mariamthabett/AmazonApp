@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import api from "../api/axios";
 import { useLang } from "../context/LanguageContext";
+import { useToast } from "../context/ToastContext";
 import { formatPrice, onImgError, FALLBACK_IMAGE } from "../utils/format";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
@@ -11,13 +12,30 @@ export default function OrderDetail() {
   const { id } = useParams();
   const location = useLocation();
   const { t, lang } = useLang();
+  const { showToast } = useToast();
 
-  // لو وصلنا للصفحة دي بعد تأكيد الطلب مباشرة، بنعرض شريط نجاح
+  // لو وصلنا للصفحة دي بعد تأكيد الطلب مباشرة, بنعرض شريط نجاح
   const justPlaced = location.state?.justPlaced;
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+
+  // إلغاء الطلب (قبل ما يتشحن) — بيرجّع المخزون من السيرفر
+  const handleCancel = async () => {
+    if (!window.confirm(t("order.cancelConfirm"))) return;
+    setCancelling(true);
+    try {
+      const { data } = await api.put(`/orders/${id}/cancel`);
+      setOrder(data);
+      showToast(t("order.cancelled"));
+    } catch (err) {
+      showToast(err.response?.data?.message || t("common.error"), "error");
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -183,6 +201,16 @@ export default function OrderDetail() {
               <Link to={`/payment/${o._id}`} className="btn-primary btn-block">
                 {t("order.payNow")}
               </Link>
+            )}
+
+            {["Pending", "Paid", "Processing"].includes(o.status) && (
+              <button
+                className="btn-outline btn-block"
+                onClick={handleCancel}
+                disabled={cancelling}
+              >
+                {cancelling ? t("order.cancelling") : t("order.cancel")}
+              </button>
             )}
           </div>
 

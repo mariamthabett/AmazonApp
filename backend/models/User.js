@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: { type: Date },
     phoneNumber: { type: String, trim: true },
+    // قائمة المفضّلة (Wishlist) — منتجات حفظها المستخدم
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

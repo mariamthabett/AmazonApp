@@ -17,8 +17,11 @@ export default function Shop() {
   const minPrice = searchParams.get("minPrice") || "";
   const maxPrice = searchParams.get("maxPrice") || "";
 
-  // الترتيب محلي (مش في الـ URL) — الافتراضي الأحدث
+  // الترتيب + الصفحة الحالية (محلي)
   const [sort, setSort] = useState("newest");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   // الأقسام للسايدبار
   const [categories, setCategories] = useState([]);
@@ -55,13 +58,18 @@ export default function Shop() {
     };
   }, []);
 
-  // نجيب المنتجات كل ما تتغيّر باراميترز الـ URL
+  // نرجّع لأول صفحة لو اتغيّرت الفلاتر أو الترتيب
+  useEffect(() => {
+    setPage(1);
+  }, [keyword, category, minPrice, maxPrice, sort]);
+
+  // نجيب المنتجات (مع pagination + sort من السيرفر) كل ما يتغيّر أي حاجة
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError("");
 
-    const params = {};
+    const params = { sort, page, limit: 12 };
     if (keyword) params.keyword = keyword;
     if (category) params.category = category;
     if (minPrice) params.minPrice = minPrice;
@@ -70,7 +78,10 @@ export default function Shop() {
     api
       .get("/products", { params })
       .then((res) => {
-        if (active) setProducts(res.data || []);
+        if (!active) return;
+        setProducts(res.data.products || []);
+        setPages(res.data.pages || 1);
+        setTotal(res.data.total || 0);
       })
       .catch(() => {
         if (active) setError(t("shop.loadError"));
@@ -83,7 +94,7 @@ export default function Shop() {
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, category, minPrice, maxPrice]);
+  }, [keyword, category, minPrice, maxPrice, sort, page]);
 
   // اختيار قسم — نحدّث ?category= مع الحفاظ على keyword
   const selectCategory = (catId) => {
@@ -117,16 +128,7 @@ export default function Shop() {
     setSearchParams(new URLSearchParams());
   };
 
-  // ترتيب المنتجات محليًا حسب حالة sort
-  const sorted = [...products];
-  if (sort === "priceLow") {
-    sorted.sort((a, b) => a.price - b.price);
-  } else if (sort === "priceHigh") {
-    sorted.sort((a, b) => b.price - a.price);
-  } else if (sort === "rating") {
-    sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }
-  // newest = نفس ترتيب الرجوع من السيرفر
+  // الترتيب بقى من السيرفر (sort param) — مفيش ترتيب محلي
 
   return (
     <div className="page">
@@ -134,7 +136,7 @@ export default function Shop() {
 
       <div className="shop-toolbar">
         <div className="toolbar-results">
-          {t("shop.results", { count: sorted.length })}
+          {t("shop.results", { count: total })}
         </div>
 
         <label className="muted">
@@ -218,7 +220,7 @@ export default function Shop() {
             <Loader />
           ) : error ? (
             <div className="alert alert-error">{t("shop.loadError")}</div>
-          ) : sorted.length === 0 ? (
+          ) : products.length === 0 ? (
             <EmptyState
               icon="🔍"
               title={t("shop.noResults")}
@@ -227,11 +229,36 @@ export default function Shop() {
               actionLabel={t("shop.clearFilters")}
             />
           ) : (
-            <div className="product-grid">
-              {sorted.map((p) => (
-                <ProductCard key={p._id} product={p} />
-              ))}
-            </div>
+            <>
+              <div className="product-grid">
+                {products.map((p) => (
+                  <ProductCard key={p._id} product={p} />
+                ))}
+              </div>
+
+              {/* ترقيم الصفحات */}
+              {pages > 1 && (
+                <div className="pagination">
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                  >
+                    ‹ {t("shop.prev")}
+                  </button>
+                  <span className="page-info">
+                    {t("shop.pageOf", { page, pages })}
+                  </span>
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => Math.min(pages, p + 1))}
+                    disabled={page >= pages}
+                  >
+                    {t("shop.next")} ›
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

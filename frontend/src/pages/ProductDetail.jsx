@@ -4,10 +4,12 @@ import api from "../api/axios";
 import { useLang } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
 import { formatPrice, onImgError, FALLBACK_IMAGE } from "../utils/format";
 import Loader from "../components/Loader";
 import EmptyState from "../components/EmptyState";
 import StarRating from "../components/StarRating";
+import ProductCard from "../components/ProductCard";
 
 // صفحة تفاصيل المنتج الواحد — public، بنجيب المنتج بالـ id من الرابط
 export default function ProductDetail() {
@@ -15,9 +17,11 @@ export default function ProductDetail() {
   const { t, lang } = useLang();
   const { user } = useAuth();
   const { addItem } = useCart();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -53,6 +57,24 @@ export default function ProductDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  // منتجات ذات صلة من نفس القسم (مع استبعاد المنتج الحالي)
+  useEffect(() => {
+    const catId = product?.category?._id;
+    if (!catId) return;
+    let active = true;
+    api
+      .get("/products", { params: { category: catId, limit: 5 } })
+      .then((res) => {
+        if (!active) return;
+        const list = (res.data.products || []).filter((p) => p._id !== product._id);
+        setRelated(list.slice(0, 4));
+      })
+      .catch(() => active && setRelated([]));
+    return () => {
+      active = false;
+    };
+  }, [product?._id, product?.category?._id]);
+
   // إرسال المراجعة ثم إعادة جلب المنتج عشان تظهر فورًا
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
@@ -69,6 +91,7 @@ export default function ProductDetail() {
     try {
       await api.post(`/products/${id}/reviews`, { rating, comment });
       setReviewSuccess(t("product.reviewThanks"));
+      showToast(t("product.reviewThanks"));
       setRating(0);
       setComment("");
       await fetchProduct();
@@ -100,7 +123,10 @@ export default function ProductDetail() {
   const inc = () => setQty((q) => Math.min(product.stock ?? 1, q + 1));
 
   const handleAddToCart = () => {
-    if (inStock) addItem(product, qty);
+    if (inStock) {
+      addItem(product, qty);
+      showToast(t("product.addedToCart"));
+    }
   };
 
   const handleBuyNow = () => {
@@ -278,6 +304,20 @@ export default function ProductDetail() {
           )}
         </div>
       </section>
+
+      {/* منتجات ذات صلة */}
+      {related.length > 0 && (
+        <section className="related-section">
+          <div className="section-head">
+            <h2 className="section-title">{t("product.related")}</h2>
+          </div>
+          <div className="product-grid">
+            {related.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

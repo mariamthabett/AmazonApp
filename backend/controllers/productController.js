@@ -1,14 +1,18 @@
 const Product = require("../models/Product");
+const cloudinary = require("../config/cloudinary");
 
-// @desc   Get all products (with search / category / price filter)
-// @route  GET /api/products
+// نهرب الحروف الخاصة في الـ regex عشان نمنع هجمات ReDoS من البحث
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// @desc   Get all products (with search / category / price filter + pagination)
+// @route  GET /api/products?keyword=&category=&minPrice=&maxPrice=&page=&limit=
 // @access Public
 const getProducts = async (req, res) => {
   const { keyword, category, minPrice, maxPrice } = req.query;
 
   const filter = {};
   if (keyword) {
-    filter.title = { $regex: keyword, $options: "i" };
+    filter.title = { $regex: escapeRegex(keyword), $options: "i" };
   }
   if (category) {
     filter.category = category;
@@ -19,11 +23,30 @@ const getProducts = async (req, res) => {
     if (maxPrice) filter.price.$lte = Number(maxPrice);
   }
 
-  const products = await Product.find(filter)
-    .populate("category", "name")
-    .sort({ createdAt: -1 });
+  // الترتيب
+  const sortMap = {
+    newest: { createdAt: -1 },
+    priceLow: { price: 1 },
+    priceHigh: { price: -1 },
+    rating: { rating: -1 },
+  };
+  const sort = sortMap[req.query.sort] || sortMap.newest;
 
-  res.json(products);
+  // الصفحات: افتراضي 12 منتج في الصفحة، بحد أقصى 100
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 12));
+  const skip = (page - 1) * limit;
+
+  const [products, total] = await Promise.all([
+    Product.find(filter)
+      .populate("category", "name")
+      .sort(sort)
+      .skip(skip)
+      .limit(limit),
+    Product.countDocuments(filter),
+  ]);
+
+  res.json({ products, page, pages: Math.ceil(total / limit) || 1, total });
 };
 
 // @desc   Get a single product
@@ -93,6 +116,24 @@ const deleteProduct = async (req, res) => {
   res.json({ message: "Product removed" });
 };
 
+// @desc   Upload a product image to Cloudinary (admin)
+// @route  POST /api/products/upload
+// @access Admin
+// Body: { image: "<base64 data URI>" }  -> returns { url }
+const uploadProductImage = async (req, res) => {
+  const { image } = req.body;
+  if (!image) {
+    res.status(400);
+    throw new Error("No image provided");
+  }
+  const uploaded = await cloudinary.uploader.upload(image, {
+    folder: "amazonapp/products",
+    resource_type: "image",
+    transformation: [{ width: 600, height: 600, crop: "fill", quality: "auto" }],
+  });
+  res.status(201).json({ url: uploaded.secure_url });
+};
+
 // @desc   Add a review to a product
 // @route  POST /api/products/:id/reviews
 // @access Private (customer)
@@ -134,5 +175,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImage,
   createProductReview,
 };

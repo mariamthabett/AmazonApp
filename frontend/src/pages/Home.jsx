@@ -34,11 +34,12 @@ export default function Home() {
       try {
         const [catsRes, prodsRes] = await Promise.all([
           api.get("/categories"),
-          api.get("/products"),
+          api.get("/products", { params: { limit: 8 } }),
         ]);
         if (!active) return;
         setCategories(catsRes.data || []);
-        setProducts(prodsRes.data || []);
+        // الـ API بقى بيرجّع { products, page, pages, total }
+        setProducts(prodsRes.data.products || []);
       } catch (err) {
         if (!active) return;
         // أي خطأ من السيرفر نعرض رسالة تحميل عامة

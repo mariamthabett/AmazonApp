@@ -4,6 +4,7 @@ import api from "../api/axios";
 import { useLang } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
 import { formatPrice, onImgError, FALLBACK_IMAGE } from "../utils/format";
 import EmptyState from "../components/EmptyState";
 
@@ -12,6 +13,7 @@ export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
   const { t, lang } = useLang();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   // بيانات الشحن — الاسم بيتعبّى مبدئيًا من اسم المستخدم
@@ -68,6 +70,7 @@ export default function Checkout() {
       if (paymentMethod === "Card") {
         navigate("/payment/" + data._id);
       } else {
+        showToast(t("checkout.orderPlaced"));
         navigate("/order/" + data._id, { state: { justPlaced: true } });
       }
     } catch (err) {

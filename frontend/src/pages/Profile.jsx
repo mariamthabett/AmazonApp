@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
+import { useToast } from "../context/ToastContext";
 import Loader from "../components/Loader";
 
 // صفحة الحساب الشخصي (محمية) — تعديل البيانات الشخصية وكلمة المرور
 export default function Profile() {
   const { user, updateUser } = useAuth();
   const { t, lang } = useLang();
+  const { showToast } = useToast();
 
   // بيانات الحساب
   const [form, setForm] = useState({
@@ -75,6 +77,7 @@ export default function Profile() {
       const { data } = await api.put("/auth/profile", form);
       updateUser(data); // نحدّث الهيدر و localStorage بالبيانات الجديدة
       setInfoMsg({ type: "success", text: t("profile.saved") });
+      showToast(t("profile.saved"));
     } catch (err) {
       setInfoMsg({
         type: "error",
@@ -108,6 +111,7 @@ export default function Profile() {
       updateUser(data); // توكن جديد
       setPw({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
       setPwMsg({ type: "success", text: t("profile.passwordSaved") });
+      showToast(t("profile.passwordSaved"));
     } catch (err) {
       setPwMsg({
         type: "error",

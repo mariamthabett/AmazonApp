@@ -28,9 +28,10 @@ export default function Cart() {
   }
 
   // لما يضغط "إتمام الشراء": لو مسجّل دخول يكمّل، وإلا يروح لتسجيل الدخول
+  // وبعد الدخول يرجع للـ checkout مباشرة بدل الرئيسية
   const handleCheckout = () => {
     if (user) navigate("/checkout");
-    else navigate("/login");
+    else navigate("/login", { state: { from: { pathname: "/checkout" } } });
   };
 
   return (

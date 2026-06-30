@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const { t, lang, toggleLang } = useLang();
   const { count } = useCart();
+  const { count: wishCount } = useWishlist();
   const navigate = useNavigate();
   const [term, setTerm] = useState("");
 
@@ -51,6 +53,19 @@ export default function Header() {
           {user && (
             <Link to="/orders" className="nav-pill">
               {t("nav.orders")}
+            </Link>
+          )}
+
+          {user?.role === "admin" && (
+            <Link to="/admin" className="nav-pill admin-pill">
+              {t("nav.admin")}
+            </Link>
+          )}
+
+          {user && (
+            <Link to="/wishlist" className="cart-link" aria-label={t("nav.wishlist")}>
+              <span className="cart-icon">♥</span>
+              {wishCount > 0 && <span className="cart-badge">{wishCount}</span>}
             </Link>
           )}
 

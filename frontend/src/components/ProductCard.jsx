@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useLang } from "../context/LanguageContext";
+import { useToast } from "../context/ToastContext";
+import { useWishlist } from "../context/WishlistContext";
+import { useAuth } from "../context/AuthContext";
 import { formatPrice, onImgError, FALLBACK_IMAGE } from "../utils/format";
 import StarRating from "./StarRating";
 
@@ -8,12 +11,30 @@ import StarRating from "./StarRating";
 export default function ProductCard({ product }) {
   const { addItem } = useCart();
   const { t, lang } = useLang();
+  const { showToast } = useToast();
+  const { isWishlisted, toggle } = useWishlist();
+  const { user } = useAuth();
 
   const outOfStock = (product.stock ?? 0) <= 0;
+  const saved = isWishlisted(product._id);
 
   const handleAdd = (e) => {
     e.preventDefault(); // ما نروحش لصفحة المنتج لما نضغط "أضف للسلة"
-    if (!outOfStock) addItem(product, 1);
+    if (!outOfStock) {
+      addItem(product, 1);
+      showToast(t("product.addedToCart"));
+    }
+  };
+
+  const handleWish = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      showToast(t("wishlist.loginRequired"), "error");
+      return;
+    }
+    const result = await toggle(product._id);
+    if (result === "added") showToast(t("wishlist.added"));
+    else if (result === "removed") showToast(t("wishlist.removed"));
   };
 
   return (
@@ -26,6 +47,15 @@ export default function ProductCard({ product }) {
           onError={onImgError}
         />
         {outOfStock && <span className="thumb-badge">{t("product.outOfStock")}</span>}
+        <button
+          type="button"
+          className={`wish-btn${saved ? " on" : ""}`}
+          onClick={handleWish}
+          aria-label={t("wishlist.toggle")}
+          title={t("wishlist.toggle")}
+        >
+          {saved ? "♥" : "♡"}
+        </button>
       </div>
 
       <div className="product-body">

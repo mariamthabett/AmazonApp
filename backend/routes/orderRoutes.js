@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   createOrder,
   payOrder,
+  cancelOrder,
   getMyOrders,
   getOrderById,
   getOrders,
@@ -14,6 +15,7 @@ router.route("/").post(protect, createOrder).get(protect, admin, getOrders);
 router.get("/mine", protect, getMyOrders);
 router.get("/:id", protect, getOrderById);
 router.put("/:id/pay", protect, payOrder);
+router.put("/:id/cancel", protect, cancelOrder);
 router.put("/:id/status", protect, admin, updateOrderStatus);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLang } from "../context/LanguageContext";
 import AuthLayout from "../components/AuthLayout";
@@ -18,6 +18,8 @@ export default function Register() {
   const { register, loading } = useAuth();
   const { t } = useLang();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from?.pathname || "/";
 
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
@@ -43,7 +45,7 @@ export default function Register() {
 
     try {
       await register(form);
-      navigate("/"); // نجح التسجيل → للرئيسية
+      navigate(redirectTo, { replace: true }); // نرجّعه للمكان اللي كان رايحله
     } catch (err) {
       setError(err.response?.data?.message || t("common.error"));
     }

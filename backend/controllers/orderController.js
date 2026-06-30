@@ -25,37 +25,49 @@ const createOrder = async (req, res) => {
     throw new Error("Complete shipping address is required");
   }
 
-  // Build order items from the DB (never trust client prices) and check stock
+  // نبني عناصر الطلب من الداتابيز (مش بنثق في أسعار العميل)
   const orderItems = [];
   let totalPrice = 0;
 
   for (const item of items) {
+    const qty = Math.max(1, Number(item.qty) || 0);
     const product = await Product.findById(item.product);
     if (!product) {
       res.status(404);
       throw new Error(`Product not found: ${item.product}`);
     }
-    if (product.stock < item.qty) {
-      res.status(400);
-      throw new Error(`Not enough stock for ${product.title}`);
-    }
-
     orderItems.push({
       product: product._id,
       title: product.title,
       image: product.image,
       price: product.price,
-      qty: item.qty,
+      qty,
     });
-    totalPrice += product.price * item.qty;
+    totalPrice += product.price * qty;
   }
 
-  // Decrement stock
+  // خصم المخزون بشكل ذرّي (atomic): الشرط stock >= qty داخل نفس العملية،
+  // فلو اتنين طلبوا آخر قطعة في نفس اللحظة واحد بس هينجح. ولو فشل عنصر،
+  // بنرجّع (rollback) العناصر اللي اتخصمت قبله.
+  const decremented = [];
   for (const item of orderItems) {
-    await Product.updateOne(
-      { _id: item.product },
-      { $inc: { stock: -item.qty } }
+    const updated = await Product.findOneAndUpdate(
+      { _id: item.product, stock: { $gte: item.qty } },
+      { $inc: { stock: -item.qty } },
+      { new: true }
     );
+    if (!updated) {
+      // فشل — نرجّع كل اللي اتخصم
+      for (const done of decremented) {
+        await Product.updateOne(
+          { _id: done.product },
+          { $inc: { stock: done.qty } }
+        );
+      }
+      res.status(400);
+      throw new Error(`Not enough stock for ${item.title}`);
+    }
+    decremented.push(item);
   }
 
   const order = await Order.create({
@@ -111,6 +123,41 @@ const payOrder = async (req, res) => {
     updatedAt: new Date(),
   };
 
+  const updated = await order.save();
+  res.json(updated);
+};
+
+// @desc   Cancel an order (owner) — restores stock
+// @route  PUT /api/orders/:id/cancel
+// @access Private (order owner or admin)
+const cancelOrder = async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+
+  const isOwner = order.user.toString() === req.user._id.toString();
+  if (!isOwner && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Not authorized to cancel this order");
+  }
+
+  // نسمح بالإلغاء بس قبل ما يتشحن
+  if (!["Pending", "Paid", "Processing"].includes(order.status)) {
+    res.status(400);
+    throw new Error(`Order cannot be cancelled (status: ${order.status})`);
+  }
+
+  // نرجّع المخزون لكل منتج في الطلب
+  for (const item of order.orderItems) {
+    await Product.updateOne(
+      { _id: item.product },
+      { $inc: { stock: item.qty } }
+    );
+  }
+
+  order.status = "Cancelled";
   const updated = await order.save();
   res.json(updated);
 };
@@ -179,6 +226,7 @@ const updateOrderStatus = async (req, res) => {
 module.exports = {
   createOrder,
   payOrder,
+  cancelOrder,
   getMyOrders,
   getOrderById,
   getOrders,

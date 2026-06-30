@@ -5,16 +5,22 @@ import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { CartProvider } from "./context/CartContext";
+import { ToastProvider } from "./context/ToastContext";
+import { WishlistProvider } from "./context/WishlistContext";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/* BrowserRouter: الراوتنج | LanguageProvider: اللغة | AuthProvider: المستخدم | CartProvider: السلة */}
+    {/* Router | اللغة | المستخدم | السلة | الإشعارات | المفضّلة */}
     <BrowserRouter>
       <LanguageProvider>
         <AuthProvider>
           <CartProvider>
-            <App />
+            <ToastProvider>
+              <WishlistProvider>
+                <App />
+              </WishlistProvider>
+            </ToastProvider>
           </CartProvider>
         </AuthProvider>
       </LanguageProvider>

@@ -7,6 +7,7 @@ const User = require("../models/User");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const { generateProducts } = require("./fakeProducts");
 
 const categories = [
   { name: "Electronics", image: "" },
@@ -34,7 +35,7 @@ const importData = async () => {
       role: "admin",
       phoneNumber: "01000000000",
     });
-    await User.create({
+    const customer = await User.create({
       firstName: "Demo",
       lastName: "Customer",
       email: "customer@example.com",
@@ -48,52 +49,11 @@ const importData = async () => {
     const byName = {};
     createdCategories.forEach((c) => (byName[c.name] = c._id));
 
-    // Products
-    const products = [
-      {
-        title: "Wireless Headphones",
-        description: "Noise-cancelling over-ear headphones.",
-        price: 1200,
-        stock: 25,
-        image: "https://picsum.photos/seed/headphones/400",
-        category: byName["Electronics"],
-      },
-      {
-        title: "Smart Watch",
-        description: "Fitness tracking and notifications.",
-        price: 2200,
-        stock: 15,
-        image: "https://picsum.photos/seed/watch/400",
-        category: byName["Electronics"],
-      },
-      {
-        title: "The Pragmatic Programmer",
-        description: "Classic software engineering book.",
-        price: 450,
-        stock: 40,
-        image: "https://picsum.photos/seed/book/400",
-        category: byName["Books"],
-      },
-      {
-        title: "Cotton T-Shirt",
-        description: "Comfortable everyday t-shirt.",
-        price: 250,
-        stock: 100,
-        image: "https://picsum.photos/seed/tshirt/400",
-        category: byName["Fashion"],
-      },
-      {
-        title: "Coffee Maker",
-        description: "Brew fresh coffee at home.",
-        price: 1800,
-        stock: 10,
-        image: "https://picsum.photos/seed/coffee/400",
-        category: byName["Home"],
-      },
-    ];
+    // Products — منتجات وهمية مولّدة تلقائيًا لكل تصنيف (مع ريفيوز)
+    const products = generateProducts(byName, [admin, customer]);
     await Product.insertMany(products);
 
-    console.log("✅ Data imported!");
+    console.log(`✅ Data imported! (${products.length} products)`);
     console.log("   Admin login    -> admin@example.com / 123456");
     console.log("   Customer login -> customer@example.com / 123456");
     process.exit(0);

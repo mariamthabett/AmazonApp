@@ -27,6 +27,20 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String, required: true },
     },
     totalPrice: { type: Number, required: true, default: 0 },
+    // طريقة الدفع: الدفع عند الاستلام أو بطاقة (محاكاة)
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "Card"],
+      default: "COD",
+    },
+    // نتيجة عملية الدفع بالبطاقة (محاكاة — مش بنخزّن بيانات كارت حقيقية)
+    paymentResult: {
+      id: { type: String },
+      status: { type: String },
+      brand: { type: String },
+      last4: { type: String },
+      updatedAt: { type: Date },
+    },
     status: {
       type: String,
       enum: [

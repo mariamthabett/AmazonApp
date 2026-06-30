@@ -5,12 +5,15 @@ const Product = require("../models/Product");
 // @route  POST /api/orders
 // @access Private (customer)
 const createOrder = async (req, res) => {
-  const { items, shippingAddress } = req.body;
+  const { items, shippingAddress, paymentMethod } = req.body;
 
   if (!items || items.length === 0) {
     res.status(400);
     throw new Error("No order items");
   }
+
+  // طريقة الدفع: الدفع عند الاستلام (COD) افتراضيًا، أو بطاقة (Card)
+  const method = paymentMethod === "Card" ? "Card" : "COD";
   if (
     !shippingAddress ||
     !shippingAddress.fullName ||
@@ -59,11 +62,57 @@ const createOrder = async (req, res) => {
     user: req.user._id,
     orderItems,
     shippingAddress,
+    paymentMethod: method,
     totalPrice,
     status: "Pending",
   });
 
   res.status(201).json(order);
+};
+
+// @desc   Pay for an order (simulated card payment)
+// @route  PUT /api/orders/:id/pay
+// @access Private (order owner)
+const payOrder = async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+
+  // صاحب الطلب فقط (أو أدمن) يقدر يدفع
+  const isOwner = order.user.toString() === req.user._id.toString();
+  if (!isOwner && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Not authorized to pay for this order");
+  }
+
+  if (order.isPaid) {
+    res.status(400);
+    throw new Error("Order is already paid");
+  }
+
+  // محاكاة دفع بكارت: بنتحقق شكليًا بس من بيانات الكارت (مش بنخزّن الرقم كامل)
+  const { cardNumber, brand } = req.body || {};
+  const digits = String(cardNumber || "").replace(/\D/g, "");
+  if (digits.length < 12) {
+    res.status(400);
+    throw new Error("Invalid card number");
+  }
+
+  order.isPaid = true;
+  order.paidAt = new Date();
+  order.status = "Paid";
+  order.paymentResult = {
+    id: `SIM-${order._id.toString().slice(-8).toUpperCase()}`,
+    status: "succeeded",
+    brand: brand || "card",
+    last4: digits.slice(-4),
+    updatedAt: new Date(),
+  };
+
+  const updated = await order.save();
+  res.json(updated);
 };
 
 // @desc   Get logged-in user's orders
@@ -129,6 +178,7 @@ const updateOrderStatus = async (req, res) => {
 
 module.exports = {
   createOrder,
+  payOrder,
   getMyOrders,
   getOrderById,
   getOrders,

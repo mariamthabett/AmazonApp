@@ -58,6 +58,13 @@ export default function ProductDetail() {
     e.preventDefault();
     setReviewError("");
     setReviewSuccess("");
+
+    // لازم يختار تقييم (السيرفر بيطلب من 1 لـ 5)
+    if (rating < 1) {
+      setReviewError(t("product.selectRating"));
+      return;
+    }
+
     setSubmitting(true);
     try {
       await api.post(`/products/${id}/reviews`, { rating, comment });
